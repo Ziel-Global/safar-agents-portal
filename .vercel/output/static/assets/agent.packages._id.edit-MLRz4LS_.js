@@ -1,0 +1,1 @@
+import{aS as o,j as t,aT as a}from"./index-CkN8EumG.js";import{P as s}from"./ProtectedRoute-D24PNqF7.js";function n(){const{id:e}=o.useParams();return t.jsx(s,{children:t.jsx(a,{existingId:e})})}export{n as component};
