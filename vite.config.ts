@@ -9,5 +9,14 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   nitro: {
     preset: "vercel",
+    // Supabase packages import tslib at runtime; bundle it so Vercel doesn't
+    // need a separate node_modules copy inside the server function.
+    noExternals: ["tslib"],
+    traceDeps: ["tslib"],
+    vercel: {
+      functions: {
+        runtime: "nodejs22.x",
+      },
+    },
   },
 });
