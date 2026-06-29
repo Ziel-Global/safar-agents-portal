@@ -1,4 +1,4 @@
-project_id = "ropnafxzhgbtwaolzgor"
+project_id = "ilaychxbebdyoeaxkcmo"
 
 [functions.check-price-alerts]
 verify_jwt = false

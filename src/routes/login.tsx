@@ -30,7 +30,7 @@ function safeRedirect(target: string | undefined): string | null {
 }
 
 function LoginPage() {
-  const { user, profile, loading, signOut } = useAuth();
+  const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const [email, setEmail] = useState("");
@@ -39,12 +39,11 @@ function LoginPage() {
 
   useEffect(() => {
     if (loading || !user || !profile) return;
-    const intended = safeRedirect(search.redirect);
-    if (!intended) return;
     if (profile.role !== "agent") {
       navigate({ to: "/unauthorised", replace: true });
       return;
     }
+    const intended = safeRedirect(search.redirect) ?? "/agent/dashboard";
     navigate({ to: intended as "/agent/dashboard", replace: true });
   }, [loading, user, profile, navigate, search.redirect]);
 
@@ -61,6 +60,16 @@ function LoginPage() {
     toast.success("Welcome back");
   };
 
+  if (loading || user) {
+    return (
+      <AuthLayout>
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </AuthLayout>
+    );
+  }
+
   return (
     <AuthLayout>
       <div className="flex flex-1 items-center justify-center px-4 py-16">
@@ -70,33 +79,6 @@ function LoginPage() {
             <CardDescription>Access your Safar agent dashboard</CardDescription>
           </CardHeader>
           <CardContent>
-            {user && profile && (
-              <div className="mb-4 rounded-md border border-border bg-muted/50 p-3 text-sm">
-                <p className="text-muted-foreground">
-                  You're already signed in
-                  {profile.full_name ? ` as ${profile.full_name}` : ""}.
-                </p>
-                <div className="mt-2 flex items-center gap-3">
-                  {profile.role === "agent" ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => navigate({ to: "/agent/dashboard" })}
-                    >
-                      Continue to dashboard
-                    </Button>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="text-xs text-primary hover:underline"
-                    onClick={() => signOut()}
-                  >
-                    Sign out to switch accounts
-                  </button>
-                </div>
-              </div>
-            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
