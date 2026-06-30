@@ -35,8 +35,8 @@ function UnauthorisedPage() {
             Access denied
           </h1>
           <p className="mt-3 text-base text-muted-foreground">
-            This portal is for registered travel agents only. Sign in with an agent account or
-            register your agency.
+            This portal is for approved Safar travel agents only. Sign in with your agent account or
+            request access for your agency.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -53,7 +53,7 @@ function UnauthorisedPage() {
               </Button>
             ) : (
               <Button asChild>
-                <Link to="/signup">Register as an agent</Link>
+                <Link to="/signup">Request agent access</Link>
               </Button>
             )}
           </div>

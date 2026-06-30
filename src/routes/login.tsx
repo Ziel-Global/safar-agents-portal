@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    created: search.created === "1" || search.created === true ? true : undefined,
   }),
   head: () => ({
     meta: [
@@ -38,7 +39,17 @@ function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    if (search.created) {
+      toast.success("Account created — sign in with your new password");
+    }
+  }, [search.created]);
+
+  useEffect(() => {
     if (loading || !user || !profile) return;
+    if (profile.role === "admin") {
+      navigate({ to: "/admin/access-requests", replace: true });
+      return;
+    }
     if (profile.role !== "agent") {
       navigate({ to: "/unauthorised", replace: true });
       return;
@@ -117,9 +128,9 @@ function LoginPage() {
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign in"}
               </Button>
               <p className="text-center text-sm text-muted-foreground">
-                No account?{" "}
+                Need agent access?{" "}
                 <Link to="/signup" className="font-medium text-primary hover:underline">
-                  Register as an agent
+                  Request access
                 </Link>
               </p>
             </form>

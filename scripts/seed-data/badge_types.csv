@@ -1,0 +1,5 @@
+id,name,description,icon_name,color_hex,help_url,authority,created_at
+atol,ATOL Protected,Air Travel Organisers Licensing — your money is protected if the agent fails.,Shield,#2563EB,https://www.caa.co.uk/atol,UK Civil Aviation Authority,2026-04-18 10:59:52.900993+00
+maqam,Maqam Registered,Approved by the Saudi Maqam platform to handle Hajj & Umrah pilgrims.,Moon,#16A34A,https://maqam.haj.gov.sa,Saudi Ministry of Hajj & Umrah,2026-04-18 10:59:52.900993+00
+ministry,Ministry Licensed,Licensed by the national ministry of tourism or religious affairs.,Building2,#0D9488,,National Ministry,2026-04-18 10:59:52.900993+00
+iata,IATA Accredited,Accredited by the International Air Transport Association to issue tickets.,Plane,#1E3A5F,https://www.iata.org/en/programs/accreditation-travel/,International Air Transport Association,2026-04-18 10:59:52.900993+00

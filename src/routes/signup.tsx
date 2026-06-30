@@ -1,52 +1,32 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/signup")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
-  }),
   head: () => ({
     meta: [
-      { title: "Agent Sign Up - Safar" },
-      { name: "description", content: "Create your Safar agent account." },
+      { title: "Request Agent Access - Safar" },
+      { name: "description", content: "Request access to the Safar agent portal." },
     ],
   }),
-  component: SignupPage,
+  component: RequestAccessPage,
 });
 
-function safeRedirect(target: string | undefined): string | null {
-  if (!target) return null;
-  if (target.startsWith("/") && !target.startsWith("//")) return target;
-  return null;
-}
-
-function SignupPage() {
-  const { user, profile, loading } = useAuth();
-  const navigate = useNavigate();
-  const search = Route.useSearch();
+function RequestAccessPage() {
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [country, setCountry] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [city, setCity] = useState("");
-
-  useEffect(() => {
-    if (!loading && user && profile?.role === "agent") {
-      const intended = safeRedirect(search.redirect) ?? "/agent/dashboard";
-      navigate({ to: intended as "/agent/dashboard", replace: true });
-    }
-  }, [loading, user, profile, navigate, search.redirect]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -56,43 +36,65 @@ function SignupPage() {
       return;
     }
 
-    if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
-      return;
-    }
-
     setSubmitting(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: "agent",
-          full_name: fullName,
-          country_code: country,
-          business_name: businessName,
-          city,
-        },
-        emailRedirectTo: `${window.location.origin}/agent/dashboard`,
-      },
+    const { error } = await supabase.from("agent_access_requests").insert({
+      email: email.trim().toLowerCase(),
+      full_name: fullName.trim(),
+      country_code: country.trim(),
+      business_name: businessName.trim(),
+      city: city.trim(),
+      status: "pending",
     });
-
     setSubmitting(false);
 
     if (error) {
-      toast.error(error.message);
+      const msg = error.message.includes("already")
+        ? "A request for this email is already being reviewed."
+        : error.message;
+      toast.error(msg);
       return;
     }
-    toast.success("Account created — welcome to Safar!");
+
+    setSubmitted(true);
+    toast.success("Request submitted");
   };
+
+  if (submitted) {
+    return (
+      <AuthLayout>
+        <div className="flex flex-1 items-center justify-center px-4 py-16">
+          <Card className="w-full max-w-md border-border bg-card shadow-lg">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+                <CheckCircle2 className="h-6 w-6 text-emerald-700" />
+              </div>
+              <CardTitle className="text-2xl">Request received</CardTitle>
+              <CardDescription>
+                We&apos;ll review your application and email you at <strong>{email}</strong> if
+                approved. You&apos;ll then be able to set up your login credentials.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full" variant="outline">
+                <Link to="/login">Back to sign in</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout>
       <div className="flex flex-1 items-center justify-center px-4 py-16">
         <Card className="w-full max-w-md border-border bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl">Create your agent account</CardTitle>
-            <CardDescription>List packages and manage leads on Safar</CardDescription>
+            <CardTitle className="text-2xl">Request agent access</CardTitle>
+            <CardDescription>
+              Submit your agency details for review. Approved agents receive an email invitation to
+              create their login.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -115,19 +117,6 @@ function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  minLength={8}
-                  required
-                  autoComplete="new-password"
                 />
               </div>
               <div className="space-y-2">
@@ -166,7 +155,7 @@ function SignupPage() {
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                 disabled={submitting}
               >
-                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create account"}
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit request"}
               </Button>
               <p className="text-center text-sm text-muted-foreground">
                 Already have an account?{" "}

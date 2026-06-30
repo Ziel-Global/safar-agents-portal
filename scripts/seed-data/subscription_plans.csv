@@ -1,0 +1,6 @@
+id,name,tier,price_monthly,currency,features,lead_limit,sort_order,is_custom,created_at,updated_at
+free,Free,free,0.00,GBP,"[""Basic agency listing"", ""Up to 5 leads per month"", ""Standard search visibility""]",5,1,f,2026-04-18 14:20:35.513858+00,2026-04-18 14:20:35.513858+00
+standard,Standard,standard,49.00,GBP,"[""Everything in Free"", ""Unlimited leads"", ""Performance analytics"", ""Media gallery"", ""Package templates""]",,2,f,2026-04-18 14:20:35.513858+00,2026-04-18 14:20:35.513858+00
+professional,Professional,professional,149.00,GBP,"[""Everything in Standard"", ""Promotional campaigns"", ""Featured listings"", ""Priority lead delivery"", ""Review solicitation tools""]",,3,f,2026-04-18 14:20:35.513858+00,2026-04-18 14:20:35.513858+00
+premium,Premium,premium,349.00,GBP,"[""Everything in Professional"", ""Competitor benchmarks"", ""Homepage spotlight"", ""Sponsored search results"", ""Dedicated account manager""]",,4,f,2026-04-18 14:20:35.513858+00,2026-04-18 14:20:35.513858+00
+enterprise,Enterprise,enterprise,0.00,GBP,"[""Everything in Premium"", ""Multi-location support"", ""API access"", ""Custom integrations"", ""SLA & priority support""]",,5,t,2026-04-18 14:20:35.513858+00,2026-04-18 14:20:35.513858+00

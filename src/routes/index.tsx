@@ -19,6 +19,10 @@ function IndexRedirect() {
 
   useEffect(() => {
     if (loading) return;
+    if (user && profile?.role === "admin") {
+      navigate({ to: "/admin/access-requests", replace: true });
+      return;
+    }
     if (user && profile?.role === "agent") {
       navigate({ to: "/agent/dashboard", replace: true });
       return;

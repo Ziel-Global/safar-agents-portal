@@ -1,0 +1,10 @@
+code,symbol,name,decimals,flag_emoji,sort_order,created_at
+GBP,£,British Pound,2,🇬🇧,1,2026-04-18 12:30:25.569035+00
+USD,$,US Dollar,2,🇺🇸,2,2026-04-18 12:30:25.569035+00
+EUR,€,Euro,2,🇪🇺,3,2026-04-18 12:30:25.569035+00
+SAR,ر.س,Saudi Riyal,2,🇸🇦,4,2026-04-18 12:30:25.569035+00
+PKR,₨,Pakistani Rupee,0,🇵🇰,5,2026-04-18 12:30:25.569035+00
+IDR,Rp,Indonesian Rupiah,0,🇮🇩,6,2026-04-18 12:30:25.569035+00
+TRY,₺,Turkish Lira,2,🇹🇷,7,2026-04-18 12:30:25.569035+00
+BDT,৳,Bangladeshi Taka,0,🇧🇩,8,2026-04-18 12:30:25.569035+00
+NGN,₦,Nigerian Naira,0,🇳🇬,9,2026-04-18 12:30:25.569035+00

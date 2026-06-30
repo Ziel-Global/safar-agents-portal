@@ -15,6 +15,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgentTemplatesRouteImport } from './routes/agent.templates'
 import { Route as AgentReviewsRouteImport } from './routes/agent.reviews'
@@ -23,8 +24,11 @@ import { Route as AgentLeadsRouteImport } from './routes/agent.leads'
 import { Route as AgentDashboardRouteImport } from './routes/agent.dashboard'
 import { Route as AgentBillingRouteImport } from './routes/agent.billing'
 import { Route as AgentAnalyticsRouteImport } from './routes/agent.analytics'
+import { Route as AdminAccessRequestsRouteImport } from './routes/admin.access-requests'
 import { Route as AgentPackagesIndexRouteImport } from './routes/agent.packages.index'
 import { Route as AgentCampaignsIndexRouteImport } from './routes/agent.campaigns.index'
+import { Route as ApiInviteVerifyRouteImport } from './routes/api.invite.verify'
+import { Route as ApiInviteAcceptRouteImport } from './routes/api.invite.accept'
 import { Route as ApiAuthSignoutAllDevicesRouteImport } from './routes/api.auth.signout-all-devices'
 import { Route as AgentTemplatesQuotesRouteImport } from './routes/agent.templates.quotes'
 import { Route as AgentPackagesNewRouteImport } from './routes/agent.packages.new'
@@ -32,6 +36,8 @@ import { Route as AgentOnboardingCredentialsRouteImport } from './routes/agent.o
 import { Route as AgentContentNewRouteImport } from './routes/agent.content.new'
 import { Route as AgentCampaignsNewRouteImport } from './routes/agent.campaigns.new'
 import { Route as AgentAdvertisingFeaturedRouteImport } from './routes/agent.advertising.featured'
+import { Route as ApiAdminAgentAccessRejectRouteImport } from './routes/api.admin.agent-access.reject'
+import { Route as ApiAdminAgentAccessApproveRouteImport } from './routes/api.admin.agent-access.approve'
 import { Route as AgentPackagesIdEditRouteImport } from './routes/agent.packages.$id.edit'
 import { Route as AgentPackagesIdAvailabilityRouteImport } from './routes/agent.packages.$id.availability'
 
@@ -63,6 +69,11 @@ const LoginRoute = LoginRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptInviteRoute = AcceptInviteRouteImport.update({
+  id: '/accept-invite',
+  path: '/accept-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -105,6 +116,11 @@ const AgentAnalyticsRoute = AgentAnalyticsRouteImport.update({
   path: '/agent/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAccessRequestsRoute = AdminAccessRequestsRouteImport.update({
+  id: '/admin/access-requests',
+  path: '/admin/access-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgentPackagesIndexRoute = AgentPackagesIndexRouteImport.update({
   id: '/agent/packages/',
   path: '/agent/packages/',
@@ -113,6 +129,16 @@ const AgentPackagesIndexRoute = AgentPackagesIndexRouteImport.update({
 const AgentCampaignsIndexRoute = AgentCampaignsIndexRouteImport.update({
   id: '/agent/campaigns/',
   path: '/agent/campaigns/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInviteVerifyRoute = ApiInviteVerifyRouteImport.update({
+  id: '/api/invite/verify',
+  path: '/api/invite/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInviteAcceptRoute = ApiInviteAcceptRouteImport.update({
+  id: '/api/invite/accept',
+  path: '/api/invite/accept',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSignoutAllDevicesRoute =
@@ -153,6 +179,18 @@ const AgentAdvertisingFeaturedRoute =
     path: '/agent/advertising/featured',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminAgentAccessRejectRoute =
+  ApiAdminAgentAccessRejectRouteImport.update({
+    id: '/api/admin/agent-access/reject',
+    path: '/api/admin/agent-access/reject',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminAgentAccessApproveRoute =
+  ApiAdminAgentAccessApproveRouteImport.update({
+    id: '/api/admin/agent-access/approve',
+    path: '/api/admin/agent-access/approve',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AgentPackagesIdEditRoute = AgentPackagesIdEditRouteImport.update({
   id: '/agent/packages/$id/edit',
   path: '/agent/packages/$id/edit',
@@ -167,12 +205,14 @@ const AgentPackagesIdAvailabilityRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/unauthorised': typeof UnauthorisedRoute
+  '/admin/access-requests': typeof AdminAccessRequestsRoute
   '/agent/analytics': typeof AgentAnalyticsRoute
   '/agent/billing': typeof AgentBillingRoute
   '/agent/dashboard': typeof AgentDashboardRoute
@@ -187,19 +227,25 @@ export interface FileRoutesByFullPath {
   '/agent/packages/new': typeof AgentPackagesNewRoute
   '/agent/templates/quotes': typeof AgentTemplatesQuotesRoute
   '/api/auth/signout-all-devices': typeof ApiAuthSignoutAllDevicesRoute
+  '/api/invite/accept': typeof ApiInviteAcceptRoute
+  '/api/invite/verify': typeof ApiInviteVerifyRoute
   '/agent/campaigns/': typeof AgentCampaignsIndexRoute
   '/agent/packages/': typeof AgentPackagesIndexRoute
   '/agent/packages/$id/availability': typeof AgentPackagesIdAvailabilityRoute
   '/agent/packages/$id/edit': typeof AgentPackagesIdEditRoute
+  '/api/admin/agent-access/approve': typeof ApiAdminAgentAccessApproveRoute
+  '/api/admin/agent-access/reject': typeof ApiAdminAgentAccessRejectRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/unauthorised': typeof UnauthorisedRoute
+  '/admin/access-requests': typeof AdminAccessRequestsRoute
   '/agent/analytics': typeof AgentAnalyticsRoute
   '/agent/billing': typeof AgentBillingRoute
   '/agent/dashboard': typeof AgentDashboardRoute
@@ -214,20 +260,26 @@ export interface FileRoutesByTo {
   '/agent/packages/new': typeof AgentPackagesNewRoute
   '/agent/templates/quotes': typeof AgentTemplatesQuotesRoute
   '/api/auth/signout-all-devices': typeof ApiAuthSignoutAllDevicesRoute
+  '/api/invite/accept': typeof ApiInviteAcceptRoute
+  '/api/invite/verify': typeof ApiInviteVerifyRoute
   '/agent/campaigns': typeof AgentCampaignsIndexRoute
   '/agent/packages': typeof AgentPackagesIndexRoute
   '/agent/packages/$id/availability': typeof AgentPackagesIdAvailabilityRoute
   '/agent/packages/$id/edit': typeof AgentPackagesIdEditRoute
+  '/api/admin/agent-access/approve': typeof ApiAdminAgentAccessApproveRoute
+  '/api/admin/agent-access/reject': typeof ApiAdminAgentAccessRejectRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/unauthorised': typeof UnauthorisedRoute
+  '/admin/access-requests': typeof AdminAccessRequestsRoute
   '/agent/analytics': typeof AgentAnalyticsRoute
   '/agent/billing': typeof AgentBillingRoute
   '/agent/dashboard': typeof AgentDashboardRoute
@@ -242,21 +294,27 @@ export interface FileRoutesById {
   '/agent/packages/new': typeof AgentPackagesNewRoute
   '/agent/templates/quotes': typeof AgentTemplatesQuotesRoute
   '/api/auth/signout-all-devices': typeof ApiAuthSignoutAllDevicesRoute
+  '/api/invite/accept': typeof ApiInviteAcceptRoute
+  '/api/invite/verify': typeof ApiInviteVerifyRoute
   '/agent/campaigns/': typeof AgentCampaignsIndexRoute
   '/agent/packages/': typeof AgentPackagesIndexRoute
   '/agent/packages/$id/availability': typeof AgentPackagesIdAvailabilityRoute
   '/agent/packages/$id/edit': typeof AgentPackagesIdEditRoute
+  '/api/admin/agent-access/approve': typeof ApiAdminAgentAccessApproveRoute
+  '/api/admin/agent-access/reject': typeof ApiAdminAgentAccessRejectRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/accept-invite'
     | '/forgot-password'
     | '/login'
     | '/reset-password'
     | '/settings'
     | '/signup'
     | '/unauthorised'
+    | '/admin/access-requests'
     | '/agent/analytics'
     | '/agent/billing'
     | '/agent/dashboard'
@@ -271,19 +329,25 @@ export interface FileRouteTypes {
     | '/agent/packages/new'
     | '/agent/templates/quotes'
     | '/api/auth/signout-all-devices'
+    | '/api/invite/accept'
+    | '/api/invite/verify'
     | '/agent/campaigns/'
     | '/agent/packages/'
     | '/agent/packages/$id/availability'
     | '/agent/packages/$id/edit'
+    | '/api/admin/agent-access/approve'
+    | '/api/admin/agent-access/reject'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/accept-invite'
     | '/forgot-password'
     | '/login'
     | '/reset-password'
     | '/settings'
     | '/signup'
     | '/unauthorised'
+    | '/admin/access-requests'
     | '/agent/analytics'
     | '/agent/billing'
     | '/agent/dashboard'
@@ -298,19 +362,25 @@ export interface FileRouteTypes {
     | '/agent/packages/new'
     | '/agent/templates/quotes'
     | '/api/auth/signout-all-devices'
+    | '/api/invite/accept'
+    | '/api/invite/verify'
     | '/agent/campaigns'
     | '/agent/packages'
     | '/agent/packages/$id/availability'
     | '/agent/packages/$id/edit'
+    | '/api/admin/agent-access/approve'
+    | '/api/admin/agent-access/reject'
   id:
     | '__root__'
     | '/'
+    | '/accept-invite'
     | '/forgot-password'
     | '/login'
     | '/reset-password'
     | '/settings'
     | '/signup'
     | '/unauthorised'
+    | '/admin/access-requests'
     | '/agent/analytics'
     | '/agent/billing'
     | '/agent/dashboard'
@@ -325,20 +395,26 @@ export interface FileRouteTypes {
     | '/agent/packages/new'
     | '/agent/templates/quotes'
     | '/api/auth/signout-all-devices'
+    | '/api/invite/accept'
+    | '/api/invite/verify'
     | '/agent/campaigns/'
     | '/agent/packages/'
     | '/agent/packages/$id/availability'
     | '/agent/packages/$id/edit'
+    | '/api/admin/agent-access/approve'
+    | '/api/admin/agent-access/reject'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcceptInviteRoute: typeof AcceptInviteRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   UnauthorisedRoute: typeof UnauthorisedRoute
+  AdminAccessRequestsRoute: typeof AdminAccessRequestsRoute
   AgentAnalyticsRoute: typeof AgentAnalyticsRoute
   AgentBillingRoute: typeof AgentBillingRoute
   AgentDashboardRoute: typeof AgentDashboardRoute
@@ -352,10 +428,14 @@ export interface RootRouteChildren {
   AgentOnboardingCredentialsRoute: typeof AgentOnboardingCredentialsRoute
   AgentPackagesNewRoute: typeof AgentPackagesNewRoute
   ApiAuthSignoutAllDevicesRoute: typeof ApiAuthSignoutAllDevicesRoute
+  ApiInviteAcceptRoute: typeof ApiInviteAcceptRoute
+  ApiInviteVerifyRoute: typeof ApiInviteVerifyRoute
   AgentCampaignsIndexRoute: typeof AgentCampaignsIndexRoute
   AgentPackagesIndexRoute: typeof AgentPackagesIndexRoute
   AgentPackagesIdAvailabilityRoute: typeof AgentPackagesIdAvailabilityRoute
   AgentPackagesIdEditRoute: typeof AgentPackagesIdEditRoute
+  ApiAdminAgentAccessApproveRoute: typeof ApiAdminAgentAccessApproveRoute
+  ApiAdminAgentAccessRejectRoute: typeof ApiAdminAgentAccessRejectRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -400,6 +480,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accept-invite': {
+      id: '/accept-invite'
+      path: '/accept-invite'
+      fullPath: '/accept-invite'
+      preLoaderRoute: typeof AcceptInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -458,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgentAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/access-requests': {
+      id: '/admin/access-requests'
+      path: '/admin/access-requests'
+      fullPath: '/admin/access-requests'
+      preLoaderRoute: typeof AdminAccessRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agent/packages/': {
       id: '/agent/packages/'
       path: '/agent/packages'
@@ -470,6 +564,20 @@ declare module '@tanstack/react-router' {
       path: '/agent/campaigns'
       fullPath: '/agent/campaigns/'
       preLoaderRoute: typeof AgentCampaignsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/invite/verify': {
+      id: '/api/invite/verify'
+      path: '/api/invite/verify'
+      fullPath: '/api/invite/verify'
+      preLoaderRoute: typeof ApiInviteVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/invite/accept': {
+      id: '/api/invite/accept'
+      path: '/api/invite/accept'
+      fullPath: '/api/invite/accept'
+      preLoaderRoute: typeof ApiInviteAcceptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/signout-all-devices': {
@@ -521,6 +629,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgentAdvertisingFeaturedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/agent-access/reject': {
+      id: '/api/admin/agent-access/reject'
+      path: '/api/admin/agent-access/reject'
+      fullPath: '/api/admin/agent-access/reject'
+      preLoaderRoute: typeof ApiAdminAgentAccessRejectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/agent-access/approve': {
+      id: '/api/admin/agent-access/approve'
+      path: '/api/admin/agent-access/approve'
+      fullPath: '/api/admin/agent-access/approve'
+      preLoaderRoute: typeof ApiAdminAgentAccessApproveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agent/packages/$id/edit': {
       id: '/agent/packages/$id/edit'
       path: '/agent/packages/$id/edit'
@@ -552,12 +674,14 @@ const AgentTemplatesRouteWithChildren = AgentTemplatesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcceptInviteRoute: AcceptInviteRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   UnauthorisedRoute: UnauthorisedRoute,
+  AdminAccessRequestsRoute: AdminAccessRequestsRoute,
   AgentAnalyticsRoute: AgentAnalyticsRoute,
   AgentBillingRoute: AgentBillingRoute,
   AgentDashboardRoute: AgentDashboardRoute,
@@ -571,10 +695,14 @@ const rootRouteChildren: RootRouteChildren = {
   AgentOnboardingCredentialsRoute: AgentOnboardingCredentialsRoute,
   AgentPackagesNewRoute: AgentPackagesNewRoute,
   ApiAuthSignoutAllDevicesRoute: ApiAuthSignoutAllDevicesRoute,
+  ApiInviteAcceptRoute: ApiInviteAcceptRoute,
+  ApiInviteVerifyRoute: ApiInviteVerifyRoute,
   AgentCampaignsIndexRoute: AgentCampaignsIndexRoute,
   AgentPackagesIndexRoute: AgentPackagesIndexRoute,
   AgentPackagesIdAvailabilityRoute: AgentPackagesIdAvailabilityRoute,
   AgentPackagesIdEditRoute: AgentPackagesIdEditRoute,
+  ApiAdminAgentAccessApproveRoute: ApiAdminAgentAccessApproveRoute,
+  ApiAdminAgentAccessRejectRoute: ApiAdminAgentAccessRejectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
