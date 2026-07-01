@@ -12,33 +12,41 @@ import { cn } from "@/lib/utils";
 const TOTAL_BADGES = 4;
 
 export function VerificationProgress({ agentId }: { agentId: string }) {
+  const [totalBadges, setTotalBadges] = useState<number | null>(null);
   const [verified, setVerified] = useState<number | null>(null);
+  const [uploaded, setUploaded] = useState(0);
   const [pending, setPending] = useState(0);
+  const [rejected, setRejected] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
-        .from("agent_badges")
-        .select("status")
-        .eq("agent_id", agentId);
+      const [{ data: badgeTypes }, { data }] = await Promise.all([
+        supabase.from("badge_types").select("id"),
+        supabase.from("agent_badges").select("status").eq("agent_id", agentId),
+      ]);
       if (cancelled) return;
       const rows = data ?? [];
+      const total = badgeTypes?.length ?? TOTAL_BADGES;
+      setTotalBadges(total);
+      setUploaded(rows.length);
       setVerified(rows.filter((r) => r.status === "verified").length);
       setPending(rows.filter((r) => r.status === "pending").length);
+      setRejected(rows.filter((r) => r.status === "rejected" || r.status === "expired").length);
     })();
     return () => {
       cancelled = true;
     };
   }, [agentId]);
 
-  if (verified == null) {
+  if (verified == null || totalBadges == null) {
     return <Skeleton className="h-32 rounded-xl" />;
   }
 
   const level: VerificationLevel = levelFromCount(verified);
-  const pct = Math.min(100, Math.round((verified / TOTAL_BADGES) * 100));
-  const remaining = TOTAL_BADGES - verified;
+  const pct = totalBadges > 0 ? Math.min(100, Math.round((uploaded / totalBadges) * 100)) : 0;
+  const remaining = Math.max(0, totalBadges - uploaded);
+  const showCredentialsButton = remaining > 0;
 
   return (
     <Card className="border-border">
@@ -59,7 +67,7 @@ export function VerificationProgress({ agentId }: { agentId: string }) {
         </div>
         <CardDescription>
           {remaining > 0
-            ? `Verify ${remaining} more credential${remaining > 1 ? "s" : ""} to reach ${
+            ? `Upload ${remaining} more credential${remaining > 1 ? "s" : ""} to continue toward ${
                 level === "none"
                   ? "bronze"
                   : level === "bronze"
@@ -75,18 +83,32 @@ export function VerificationProgress({ agentId }: { agentId: string }) {
         <div>
           <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
             <span>
-              {verified} of {TOTAL_BADGES} verified
+              {uploaded} of {totalBadges} uploaded
             </span>
             {pending > 0 ? <span>{pending} under review</span> : null}
           </div>
           <Progress value={pct} className="h-2" />
         </div>
-        <Button asChild size="sm" variant={remaining > 0 ? "default" : "outline"}>
-          <Link to="/agent/onboarding/credentials">
-            {remaining > 0 ? "Add credentials" : "Manage credentials"}
-            <ChevronRight className="h-4 w-4" />
-          </Link>
-        </Button>
+        {pending > 0 ? (
+          <p className="text-xs text-muted-foreground">
+            Verification pending - awaiting admin review. You can upload again once review is
+            complete.
+          </p>
+        ) : null}
+        {rejected > 0 ? (
+          <div className="rounded-md border border-rose-300 bg-rose-50 p-2.5 text-xs text-rose-900">
+            {rejected} document{rejected > 1 ? "s were" : " was"} rejected. Please re-upload in
+            Credentials.
+          </div>
+        ) : null}
+        {showCredentialsButton ? (
+          <Button asChild size="sm" variant="default">
+            <Link to="/agent/onboarding/credentials">
+              Add credentials
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        ) : null}
       </CardContent>
     </Card>
   );

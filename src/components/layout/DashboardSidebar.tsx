@@ -21,10 +21,14 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCredentialAlerts } from "@/hooks/useCredentialAlerts";
+import { cn } from "@/lib/utils";
 
 const agentItems = [
   { title: "Dashboard", url: "/agent/dashboard", icon: LayoutDashboard },
@@ -47,6 +51,8 @@ export function DashboardSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const { agent } = useAuth();
+  const credentialAlerts = useCredentialAlerts(agent?.id);
 
   return (
     <Sidebar collapsible="icon">
@@ -68,14 +74,43 @@ export function DashboardSidebar() {
                   location.pathname === item.url ||
                   (item.url === "/agent/packages" &&
                     location.pathname.startsWith("/agent/packages"));
+                const isCredentials = item.title === "Credentials";
+                const showCredentialBadge = isCredentials && credentialAlerts.total > 0;
+
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={
+                        showCredentialBadge && collapsed ? credentialAlerts.label : undefined
+                      }
+                    >
                       <Link to={item.url as "/"} preload="intent">
                         <item.icon className="h-4 w-4" />
                         {!collapsed && <span>{item.title}</span>}
                       </Link>
                     </SidebarMenuButton>
+                    {showCredentialBadge ? (
+                      <>
+                        <SidebarMenuBadge
+                          className="bg-rose-500 font-semibold text-white"
+                          title={credentialAlerts.label}
+                        >
+                          {credentialAlerts.total > 9 ? "9+" : credentialAlerts.total}
+                        </SidebarMenuBadge>
+                        {collapsed ? (
+                          <span
+                            className={cn(
+                              "pointer-events-none absolute right-1 top-1 hidden h-2 w-2 rounded-full bg-rose-500 ring-2 ring-sidebar",
+                              "group-data-[collapsible=icon]:block",
+                            )}
+                            title={credentialAlerts.label}
+                            aria-label={credentialAlerts.label}
+                          />
+                        ) : null}
+                      </>
+                    ) : null}
                   </SidebarMenuItem>
                 );
               })}
